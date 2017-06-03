@@ -10,18 +10,18 @@ case class Fp(p: Int) extends Field {
 
   def builder(x: T1): T2 = FpElement(x)
 
-  val identity = builder(1) // TODO conviven identity con one?
+  val identity: FpElement = builder(1) // TODO conviven identity con one?
   val structureId: String = "Fp" + p.toString
   val finite: Boolean = true
-  val zero = builder(0)
+  val zero: FpElement = builder(0)
 
-  override val one = builder(1)
-  val minusOne = builder(p - 1)
+  override val one: FpElement = builder(1)
+  val minusOne: FpElement = builder(p - 1)
 
   def modulo(x: T1): T1 = if (x < 0) -x else x
 
   private object FpElement {
-    def apply(k: T1) = {
+    def apply(k: T1): FpElement = {
       val v: Int = if (k < 0) {
         (modulo(k) / p + 1) * p + k
       } else {
@@ -32,14 +32,14 @@ case class Fp(p: Int) extends Field {
   }
   class FpElement (val k: T1)  extends FieldElement {
 
-    val elementId = k.toString
-    val fatherFp = Fp.this
-    val isZero = k == 0
+    val elementId: String = k.toString
+    val fatherFp: Fp = Fp.this
+    val isZero: Boolean = k == 0
 
-    def add(other: FpElement) = builder((k + other.k) % p)
-    def minus(other: FpElement) = builder((k - other.k) % p)
-    def negate = builder(p - k)
-    def multiply(other: FpElement) = builder((k * other.k) % p)
+    def add(other: FpElement): FpElement = builder((k + other.k) % p)
+    def minus(other: FpElement): FpElement = builder((k - other.k) % p)
+    def negate: FpElement = builder(p - k)
+    def multiply(other: FpElement): FpElement = builder((k * other.k) % p)
 
     /** Power of an element
       *
@@ -53,8 +53,8 @@ case class Fp(p: Int) extends Field {
     def power(p: Int): FpElement = p match {
       case 0 => one
       case 1 => this
-      case p if p % 2 == 1 => this * (this * this).power((p - 1) / 2)
-      case p if p % 2 == 0 => (this * this).power(p / 2)
+      case q if q % 2 == 1 => this * (this * this).power((q - 1) / 2)
+      case q if q % 2 == 0 => (this * this).power(q / 2)
     }
 
     def inverse: T2 = {
@@ -65,7 +65,7 @@ case class Fp(p: Int) extends Field {
       }
     }
 
-    override def toString = k.toString // + " mod " + n.toString
+    override def toString: String = k.toString // + " mod " + n.toString
 
     override def equals(other: Any): Boolean = {
       val that = other.asInstanceOf[T2]
