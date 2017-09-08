@@ -6,5 +6,7 @@ target
 *.iws
 .idea
 out
+### Scala template
+*.class
+*.log
 
-.DS_Store

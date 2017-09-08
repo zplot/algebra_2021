@@ -11,10 +11,10 @@ case class FiniteField(p: Int, w: Int) extends Field {
   val numElements: Int = Utils.power(p, w)
   val baseField: Fp = Fp(p)
   val polyRing: PolynomialsOverFp = PolynomialsOverFp(baseField)
-  val h = polyRing.findIrredPolProb(w)
-  val identity = builder(polyRing.one)
+  val h: polyRing.T2 = polyRing.findIrredPolProb(w)
+  val identity: FiniteFieldElement = builder(polyRing.one)
 
-  type T1 = polyRing.T2
+  type T1 = polyRing.T2 // Un polinomio sobre el cuerpo base
   type T2 = FiniteFieldElement
 
 
@@ -23,14 +23,11 @@ case class FiniteField(p: Int, w: Int) extends Field {
 
   // takes a Map[Int, Int] and builds a FiniteFieldElement
   def builder(x: IntMap): T2 = {
-    def util(x: Int): polyRing.field.FpElement = polyRing.field.builder(x)
-    def utilDuplas(x: (Int, Int)): (Int, polyRing.field.FpElement) = {
-      (x._1, util(x._2))
-    }
-    val xMap = x.map
-    val xList = xMap.toList
-    val xList2 = xList.map(utilDuplas)
-    val xMap2 = xList2.toMap
+
+    val xMap: Map[Int, Int] = x.map
+    val xList: List[(Int, Int)] = xMap.toList
+    val xList2 = xList
+    val xMap2: Map[Int, Int] = xList2.toMap
     val polynomialInPolyRing = polyRing.builder(xMap2)
     FiniteFieldElement(polynomialInPolyRing)
   }
@@ -52,13 +49,13 @@ case class FiniteField(p: Int, w: Int) extends Field {
 
   class FiniteFieldElement private(val f: T1) extends FieldElement {
 
-    val fatherFiniteField = FiniteField.this
-    val elementId = f.toString
-    val exponents = f.map.keySet
-    val coefficients = f.map.values.toSet
+    val fatherFiniteField: FiniteField = FiniteField.this
+    val elementId: String = f.toString
+    val exponents: Set[Int] = f.map.keySet
+    val coefficients: Set[Int] = f.map.values.toSet
     val isZero: Boolean = {
       val cond0: Boolean = this == zero
-      val cond1: Boolean = coefficients.toList.forall(x => x.isZero)
+      val cond1: Boolean = coefficients.toList.forall(x => x == 0)
       cond0 || cond1
     }
 

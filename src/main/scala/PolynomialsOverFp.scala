@@ -219,14 +219,39 @@ class PolynomialsOverFp private(val field: Fp)  {
       val b: T2 = other
       val d: Int = b.degree
 
-      def s(r: T2): T2 = builder(Map( r.degree - d -> r.lc % b.lc))
+
+
+      def rem(a: T2, b: T2): T2 = {
+
+        var q: T2 = zero
+        var r: T2 = a
+        val d: Int = b.degree
+        var s: T2 = zero
+
+        while (r.degree >= d) {
+          println("r.lc = " + r.lc)
+          println("b.lc = " + b.lc)
+          println("r.lc / b.lc  = " + r.lc / b.lc)
+
+          s = builder(Map( r.degree - d -> r.lc / b.lc))
+          q = q + s
+          r = r - s * b
+          println("r = " + r)
+          println("d = " + d)
+          println("s(r) = " + s)
+        }
+        r
+      }
 
       def loop(q: T2, r: T2): (T2, T2) = {
-        if (r.degree < d) (q, r) else {
-          loop(q + s(r), r - (s(r) * b))
+        if (r == zero) (q, r) else {
+
+          println("r = " + r)
+          println("rem(q, r) = " + rem(q, r))
+          loop(r, rem(q, r))
         }
       }
-      loop(zero, a)
+      loop(a, b)
     }
 
     def divide(other: Int): (T2, T2) = {
@@ -275,7 +300,8 @@ class PolynomialsOverFp private(val field: Fp)  {
         val xToPn = exp(x, exponent)
         //xToPn.mod(this) == x.mod(this)
         val xToPnMinusX = xToPn - x
-        xToPnMinusX.mod(this) == zero
+        val tmp2 = xToPnMinusX.mod(this) == zero
+        tmp2
       }
 
       val cond2: Boolean = {

@@ -8,7 +8,11 @@ case class Fp(p: Int) extends Field {
   type T2 = FpElement
 
 
+
+
   def builder(x: T1): T2 = FpElement(x)
+
+  implicit def imp1(x: Int): T2 = builder(x)
 
   val identity: FpElement = builder(1) // TODO conviven identity con one?
   val structureId: String = "Fp" + p.toString
@@ -74,3 +78,4 @@ case class Fp(p: Int) extends Field {
     }
   }
 }
+
