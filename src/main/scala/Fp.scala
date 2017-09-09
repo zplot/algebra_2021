@@ -60,10 +60,10 @@ case class Fp(p: Int) extends Field {
     def power(p: Int): FpElement = {
       @tailrec
       def exponen(factor: FpElement, exponente: Int, base: FpElement): FpElement = exponente match {
-        case 0 => one
-        case 1 => base
-        case q if q % 2 == 1 => exponen(base, (q - 1) / 2, base * base)
-        case q if q % 2 == 0 => exponen(one, q / 2, base * base)
+        case 0 => factor
+        case 1 => factor * base
+        case q if q % 2 == 1 => exponen(factor * base, (q - 1) / 2, base * base)
+        case q if q % 2 == 0 => exponen(factor, q / 2, base * base)
       }
       exponen(one, p, this)
     }
