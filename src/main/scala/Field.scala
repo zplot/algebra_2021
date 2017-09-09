@@ -33,6 +33,7 @@ trait Field extends UFD {
         this.multiply(other.inverse)
       }
     }
+    def /(other: T2): T2 = this.divide(other)
   }
 }
 

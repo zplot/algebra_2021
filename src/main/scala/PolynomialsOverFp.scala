@@ -2,7 +2,7 @@ package algebra
 import algebra.Utils._
 
 /**
-  * builder of a Polynomial Ring over field
+  * builder of a Polynomial Ring over Fp
   */
 object PolynomialsOverFp {
 
@@ -13,15 +13,19 @@ object PolynomialsOverFp {
 
 class PolynomialsOverFp private(val field: Fp)  {
 
-  type T1 = Map[Int, Int]
+
+  type T0 = field.FpElement
+  type T1 = Map[Int, T0]
   type T2 = Polynomial
 
   // takes a Map[Int, Int] and builds a Polynomial
-  def builder(x: Map[Int, Int]): T2 = Polynomial(x)
+  def builder(x: T1): T2 = Polynomial(x)
+
+  /* TODO
 
   def findAllIrredPol(degree: Int): List[T2] = {
 
-    def fromListToPoly(list: List[Int]): T2 = {
+    def fromListToPoly(list: List[field.FpElement]): T2 = {
       val oneTwoThree = (0 to degree).toList
       val ourZip = oneTwoThree zip list
       val ourMap = ourZip.toMap
@@ -29,7 +33,7 @@ class PolynomialsOverFp private(val field: Fp)  {
     }
 
     val listOfFieldElements = (0 until field.p).toList
-    val listOflists = combinations[Int](degree + 1, listOfFieldElements)
+    val listOflists = combinations[field.FpElement](degree + 1, listOfFieldElements)
     val listOflistsDrop0 = listOflists.tail
     val listOfPolys = listOflistsDrop0 map (x => fromListToPoly(x))
     val listMonic = listOfPolys.filter(_.isMonic)
@@ -73,16 +77,18 @@ class PolynomialsOverFp private(val field: Fp)  {
     loop
   }
 
+  */
+
 
   // See Victor Shoup pag. 472
   def gcdExtended(g: T2, h: T2): (T2, T2, T2) = {
 
     val r: T2 = g
     val rPrime: T2 = h
-    val s: T2 = builder(Map(0 -> 1))
+    val s: T2 = builder(Map(0 -> field.one))
     val sPrime: T2 = zero
     val t: T2 = zero
-    val tPrime: T2 = builder(Map(0 -> 1))
+    val tPrime: T2 = builder(Map(0 -> field.one))
 
     def loop(r: T2, s: T2, t: T2, rPrime: T2, sPrime: T2,tPrime: T2): (T2, T2, T2,T2, T2, T2) = {
 
@@ -128,9 +134,9 @@ class PolynomialsOverFp private(val field: Fp)  {
 
       val normalMap: T1 = {
         val theMapList = map.toList
-        def newMapList(oldMapList: List[(Int, Int)]): List[(Int, Int)] = oldMapList match {
+        def newMapList(oldMapList: List[(Int, T0)]): List[(Int, T0)] = oldMapList match {
           case Nil => Nil
-          case ((x1, 0) :: xs) => newMapList(xs)
+          case ((x1, field.zero) :: xs) => newMapList(xs)
           case ((x1, x2) :: xs)  => (x1, x2) :: newMapList(xs)
         }
         val theNewMapList = newMapList(theMapList)
@@ -141,15 +147,15 @@ class PolynomialsOverFp private(val field: Fp)  {
     }
 
     // Creo que esto es para comparar monomios de acuerdo con el grado
-    def comp(monomial1: (Int, Int), monomial2: (Int, Int)): Boolean = monomial1._1 > monomial2._1
+    def comp(monomial1: (Int, T0), monomial2: (Int, T0)): Boolean = monomial1._1 > monomial2._1
 
   }
 
-  val zero: T2 = builder(Map(0 -> 0))
+  val zero: T2 = builder(Map(0 -> field.zero))
 
-  val x: T2 = builder(Map(1 -> 1))
+  val x: T2 = builder(Map(1 -> field.one))
 
-  val one: T2 = builder(Map(0 -> 1))
+  val one: T2 = builder(Map(0 -> field.one))
 
 
 
@@ -157,10 +163,10 @@ class PolynomialsOverFp private(val field: Fp)  {
 
     def add(other: T2): T2 = {
 
-      val tmp3 = 0
+      val tmp3 = field.zero
       val exponents = (map.keySet ++ other.map.keySet).toList
-      def recursion(exp: List[Int]): Map[Int, Int] = exp match {
-        case Nil => Map[Int, Int]()
+      def recursion(exp: List[Int]): Map[Int, T0] = exp match {
+        case Nil => Map[Int, T0]()
         case x :: xs => recursion(xs) + (x -> (map.getOrElse(x, tmp3) + other.map.getOrElse(x, tmp3)))
       }
 
@@ -170,25 +176,19 @@ class PolynomialsOverFp private(val field: Fp)  {
       result
     }
 
-    def minus(other: T2): T2 = {
-      val tmp1 = other
-      val tmp2 = -1
-      val tmp3 = tmp1 * tmp2
-      val tmp4 = this.add(tmp3)
-      tmp4
-    }
+    def minus(other: T2): T2 = this.add(other * field.builder(field.p - 1))
 
     def multiply(other: T2): T2 = {
-      val step1 = for (i <- this.map.toList; j <- other.map.toList) yield (i._1 + j._1, i._2 * j._2)
-      val exponents = step1.map(x => x._1).distinct
-      val step2 = for (i <- exponents) yield step1.filter(x => x._1 == i)
+      val step1: List[(Int, T0)] = for (i <- this.map.toList; j <- other.map.toList) yield (i._1 + j._1, i._2 * j._2)
+      val exponents: List[Int] = step1.map(x => x._1).distinct
+      val step2: List[List[(Int, T0)]] = for (i <- exponents) yield step1.filter(x => x._1 == i)
 
-      def sumListInRing(list1: List[Int]): Int = list1 match {
-        case Nil => 0
+      def sumListInRing(list1: List[T0]): T0 = list1 match {
+        case Nil => field.zero
         case x :: xs => x + sumListInRing(xs)
       }
 
-      def sumCoef(l: List[(Int, Int)]): (Int, Int) = {
+      def sumCoef(l: List[(Int, T0)]): (Int, T0) = {
         (l.head._1, sumListInRing(l.map(x => x._2)))
       }
 
@@ -198,63 +198,59 @@ class PolynomialsOverFp private(val field: Fp)  {
 
     }
 
-
-
     val degree: Int = {
       //val step1 =  map.keySet
       val step1 = map.keySet
-      if (this.map == Map(0 -> 0) || this.map == Map[Int, Int]()) -1 else step1.max
+      if (this.map == Map(0 -> field.zero) || this.map == Map[Int, T0]()) -1 else step1.max
     }
 
-    val lc: Int = {
-      if (degree == -1) 0 else this.map(degree)
+
+
+    val lc: T0 = {
+      if (degree == -1) field.zero else this.map(degree)
     }
 
-    val isMonic: Boolean = lc == 1
+    val lt: Polynomial = builder(Map(degree -> lc))
+
+    val isMonic: Boolean = lc == field.one
+
+    type Monomial = (Int, T0)
+
+    def monomialDivision(dividendo: Monomial, divisor: Monomial): Monomial = {
+      (dividendo._1 - divisor._1, dividendo._2.divide(divisor._2))
+    }
+
+
+
 
     // Ver https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclid.27s_algorithm
+    // TODO Hacer bien la división de polinomios
     def divide(other: T2): (T2, T2) = {
 
-      val a: T2 = this
-      val b: T2 = other
-      val d: Int = b.degree
+      val dividendo = this
+      val divisor = other
+      val cocienteAcum = zero
 
+      def loop(dividendo: Polynomial, divisor: Polynomial, cocienteAcum: Polynomial): ( Polynomial, Polynomial) = {
 
+        if (dividendo.degree < divisor.degree) (cocienteAcum, dividendo) else {
+          val nuevoCocienteAcum: Polynomial = cocienteAcum + ???
+          val nuevoDividendo: Polynomial = dividendo - divisor * cocienteAcum
+          loop(nuevoDividendo, divisor, nuevoCocienteAcum)
 
-      def rem(a: T2, b: T2): T2 = {
-
-        var q: T2 = zero
-        var r: T2 = a
-        val d: Int = b.degree
-        var s: T2 = zero
-
-        while (r.degree >= d) {
-          println("r.lc = " + r.lc)
-          println("b.lc = " + b.lc)
-          println("r.lc / b.lc  = " + r.lc / b.lc)
-
-          s = builder(Map( r.degree - d -> r.lc / b.lc))
-          q = q + s
-          r = r - s * b
-          println("r = " + r)
-          println("d = " + d)
-          println("s(r) = " + s)
-        }
-        r
-      }
-
-      def loop(q: T2, r: T2): (T2, T2) = {
-        if (r == zero) (q, r) else {
-
-          println("r = " + r)
-          println("rem(q, r) = " + rem(q, r))
-          loop(r, rem(q, r))
         }
       }
-      loop(a, b)
+
+
+
+
+
+
+
+      (other,other)
     }
 
-    def divide(other: Int): (T2, T2) = {
+    def divide(other: T0): (T2, T2) = {
 
       val a: T2 = this
       val b: T2 = builder(Map(0 -> other))
@@ -262,25 +258,25 @@ class PolynomialsOverFp private(val field: Fp)  {
 
     }
 
-    def multiply(other: Int): T2 = this.multiply(builder(Map(0 -> other)))
+    def multiply(other: T0): T2 = this.multiply(builder(Map(0 -> other)))
 
     def *(other: T2): T2 = this.multiply(other)
-    def *(other: Int): T2 = this.multiply(other)
+    def *(other: T0): T2 = this.multiply(other)
 
     def +(other: T2): T2 = this.add(other)
 
     def -(other: T2): T2 = this.minus(other)
 
     def /(other: T2): (T2, T2) = this.divide(other)
-    def /(other: Int): (T2, T2) = this.divide(other)
+    def /(other: T0): (T2, T2) = this.divide(other)
 
     def toMonic: T2 = {
       val oldMapList = map.toList
-      def newMapList(oldMapList: List[(Int, Int)]): List[(Int, Int)] = oldMapList match {
+      def newMapList(oldMapList: List[(Int, T0)]): List[(Int, T0)] = oldMapList match {
         case Nil => Nil
-        case ((x1, x2) :: xs)  => (x1, x2 % lc) :: newMapList(xs)
+        case ((x1, x2) :: xs)  => (x1, x2 / lc) :: newMapList(xs)
       }
-      if (lc == 1) this else {
+      if (lc == field.one) this else {
         val finalMap = newMapList(oldMapList).toMap
         new T2(finalMap)
       }
@@ -322,12 +318,12 @@ class PolynomialsOverFp private(val field: Fp)  {
     }
 
     override def toString: String = {
-      def printPol(a: List[(Int, Int)]): String = a match {
+      def printPol(a: List[(Int, T0)]): String = a match {
         case Nil => ""
         case x :: xs if x._1 == 0 => x._2 + " + " + printPol(xs)
-        case x :: xs if x._1 == 1 && x._2 == 1 => "x" + " + " + printPol(xs)
+        case x :: xs if x._1 == 1 && x._2 == field.one => "x" + " + " + printPol(xs)
         case x :: xs if x._1 == 1 => x._2 + "x" + " + " + printPol(xs)
-        case x :: xs if x._2 == 1 => "x" + x._1 + " + " + printPol(xs)
+        case x :: xs if x._2 == field.one => "x" + x._1 + " + " + printPol(xs)
         case x :: xs => x._2 + "x" + x._1 + " + " + printPol(xs)
         //"hola hola 189"
       }
@@ -340,8 +336,8 @@ class PolynomialsOverFp private(val field: Fp)  {
       if (that == null) false
       else {
         val a1: Boolean = this.map == that.map
-        val a2: Boolean = (this.map == Map[Int, Int]()) && (that.map == Map(0 -> 0))
-        val a3: Boolean = (that.map == Map[Int, Int]()) && (this.map == Map(0 -> 0))
+        val a2: Boolean = (this.map == Map[Int, T0]()) && (that.map == Map(0 -> field.zero))
+        val a3: Boolean = (that.map == Map[Int, T0]()) && (this.map == Map(0 -> field.zero))
         a1 || a2 || a3
       }
     }
