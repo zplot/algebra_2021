@@ -1,6 +1,8 @@
 package algebra
 import algebra.Utils._
 
+import scala.annotation.tailrec
+
 case class Fp(p: Int) extends Field {
   require(isPrime(p), p + " is not a prime number")
 
@@ -47,20 +49,23 @@ case class Fp(p: Int) extends Field {
     def negate: FpElement = builder(p - k)
     def multiply(other: FpElement): FpElement = builder((k * other.k) % p)
 
-    /** Power of an element
-      *
-      * Uses repeated squaring algorithm:
-      * http://www.algorithmist.com/index.php/Repeated_Squaring
-      *
-      * val cuerpo = Fp(43)
-      * val a = cuerpo.builder(1520)
-      * println(a.inverse*a)
-      */
-    def power(p: Int): FpElement = p match {
+
+    def powerSinTailRecursion(p: Int): FpElement = p match {
       case 0 => one
       case 1 => this
       case q if q % 2 == 1 => this * (this * this).power((q - 1) / 2)
       case q if q % 2 == 0 => (this * this).power(q / 2)
+    }
+
+    def power(p: Int): FpElement = {
+      @tailrec
+      def exponen(factor: FpElement, exponente: Int, base: FpElement): FpElement = exponente match {
+        case 0 => one
+        case 1 => base
+        case q if q % 2 == 1 => exponen(base, (q - 1) / 2, base * base)
+        case q if q % 2 == 0 => exponen(one, q / 2, base * base)
+      }
+      exponen(one, p, this)
     }
 
     def inverse: T2 = {
