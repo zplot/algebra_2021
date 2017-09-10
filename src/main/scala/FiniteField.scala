@@ -1,37 +1,24 @@
 package algebra
 import algebra.Utils._
 
-/*
-
-
 case class FiniteField(p: Int, w: Int) extends Field {
   require(isPrime(p), p + " is not a prime number")
-
 
 
   val numElements: Int = Utils.power(p, w)
   val baseField: Fp = Fp(p)
   val polyRing: PolynomialsOverFp = PolynomialsOverFp(baseField)
-  val h: polyRing.T2 = polyRing.findIrredPolProb(w)
+  val h: polyRing.T2 = polyRing.findConwayPol(w)
   val identity: FiniteFieldElement = builder(polyRing.one)
 
-  type T1 = polyRing.T2 // Un polinomio sobre el cuerpo base
+  type T1 = polyRing.Polynomial // Un polinomio sobre el cuerpo base
   type T2 = FiniteFieldElement
 
 
   // takes a polynomial in polyRing and builds a FiniteFieldElement
   def builder(x: T1): T2 = FiniteFieldElement(x)
 
-  // takes a Map[Int, Int] and builds a FiniteFieldElement
-  def builder(x: IntMap): T2 = {
 
-    val xMap: Map[Int, Int] = x.map
-    val xList: List[(Int, Int)] = xMap.toList
-    val xList2 = xList
-    val xMap2: Map[Int, Int] = xList2.toMap
-    val polynomialInPolyRing = polyRing.builder(xMap2)
-    FiniteFieldElement(polynomialInPolyRing)
-  }
 
   val structureId: String = "Fq(" + Utils.power(p, w).toString + ")"
   val finite: Boolean = true
@@ -53,10 +40,10 @@ case class FiniteField(p: Int, w: Int) extends Field {
     val fatherFiniteField: FiniteField = FiniteField.this
     val elementId: String = f.toString
     val exponents: Set[Int] = f.map.keySet
-    val coefficients: Set[Int] = f.map.values.toSet
+    val coefficients: Set[polyRing.T0] = f.map.values.toSet
     val isZero: Boolean = {
       val cond0: Boolean = this == zero
-      val cond1: Boolean = coefficients.toList.forall(x => x == 0)
+      val cond1: Boolean = coefficients.toList.forall(x => x == polyRing.field.zero)
       cond0 || cond1
     }
 
@@ -98,4 +85,4 @@ case class FiniteField(p: Int, w: Int) extends Field {
 
 
 
-*/
+
