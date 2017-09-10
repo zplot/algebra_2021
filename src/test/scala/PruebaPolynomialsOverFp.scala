@@ -2,6 +2,8 @@ package algebra
 
 import algebra.Utils.IntMap
 
+import scala.io.{BufferedSource, Source}
+
 object PruebaPolynomialsOverFp extends App {
 
   println("Empezamos")
@@ -29,6 +31,60 @@ object PruebaPolynomialsOverFp extends App {
   val cociente = poly1 / poly2
 
   println("cociente = " + cociente)
+
+  val p = 2
+  val n = 5
+
+  def pleidafun(s: String): Int = {
+    val comaPos: Int = s.indexOf(",")
+    val pleida = s.substring(1, comaPos)
+    pleida.toInt
+  }
+
+  def nleidafun(s: String): Int = {
+    val comaPos: Int = s.indexOf(",")
+    val segundaComa: Int = s.indexOf(",", comaPos + 1)
+    val nleida = s.substring(comaPos + 1, segundaComa)
+    nleida.toInt
+  }
+
+
+  val bufferedSource: BufferedSource = Source.fromFile("allConwayPolynomials.txt")
+
+
+  val tmp2: List[String] = bufferedSource.getLines.filter(s => pleidafun(s) == p && nleidafun(s) == n).toList
+
+  bufferedSource.close
+
+  val tmp3: String = tmp2.head
+
+  println(tmp3)
+
+  val corchetePos1: Int = tmp3.indexOf("[", 2)
+  println("corchetePos1 = " + corchetePos1)
+
+  val corchetePos2: Int = tmp3.indexOf("]")
+  println("corchetePos2 = " + corchetePos2)
+
+  val tmp4 = tmp3.substring(corchetePos1 + 1, corchetePos2)
+  println(tmp4)
+
+  val tmp5: List[Int] = tmp4.split(",").map(_.toInt).toList
+  println(tmp5)
+
+  val cosa1 = anillo.findConwayPol(5)
+  println("cuerpo = " + anillo.field)
+  println(cosa1)
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 package algebra
 import algebra.Utils._
+import scala.io.{BufferedSource, Source}
 
 /**
   * builder of a Polynomial Ring over Fp
@@ -21,8 +22,6 @@ class PolynomialsOverFp private(val field: Fp)  {
   // takes a Map[Int, T0] and builds a Polynomial
   def builder(x: T1): T2 = Polynomial(x)
 
-   //TODO Usar polinomios de Conway?
-
   def findAllIrredPol(degree: Int): List[T2] = {
 
     def fromListToPoly(list: List[field.FpElement]): T2 = {
@@ -43,38 +42,45 @@ class PolynomialsOverFp private(val field: Fp)  {
     listOfIrreducibles
   }
 
-  def findIrredPol(degree: Int): T2 = findAllIrredPol(degree).head
+  def fromListToPol(coefs: List[T0]): Polynomial = {
+    val lista = 0.to(coefs.length - 1)
+    val tmp1 = for (i <- lista) yield (i, coefs(i))
+    val tmp2 = tmp1.toMap
+    val tmp3 = builder(tmp2)
+    tmp3
+  }
 
-  def findIrredPolProb(degree: Int): T2 = {
+  def findConwayPol(n: Int): Polynomial = {
 
-    def fromListToPolynomial(list: List[T0]) = {
-      val listOfElements = list
-      val oneTwoThree = list.indices.toList.reverse
-      val quasiMap = oneTwoThree zip listOfElements
-      val map = quasiMap.toList.toMap
-      builder(map)
+    def pleidafun(s: String): Int = {
+      val comaPos: Int = s.indexOf(",")
+      val pleida = s.substring(1, comaPos)
+      pleida.toInt
     }
 
-    val p = field.p
-
-    def genPolynomial = {
-      val sequence = for (i <- 1 to degree) yield randomP(p)
-      val list = sequence.toList
-      val listExtended = (1 :: list).map(field.builder)
-      val polynomial = fromListToPolynomial(listExtended)
-      polynomial
+    def nleidafun(s: String): Int = {
+      val comaPos: Int = s.indexOf(",")
+      val segundaComa: Int = s.indexOf(",", comaPos + 1)
+      val nleida = s.substring(comaPos + 1, segundaComa)
+      nleida.toInt
     }
 
-    def loop: T2 = {
-      val generated = genPolynomial
-      if (generated.isIrreducible) {
-        generated
-      } else {
-        loop
-      }
-    }
+    val bufferedSource: BufferedSource = Source.fromFile("allConwayPolynomials.txt")
 
-    loop
+    val tmp2: List[String] = bufferedSource.getLines.filter(s => pleidafun(s) == field.p && nleidafun(s) == n).toList
+
+    bufferedSource.close
+
+    val tmp3: String = tmp2.head
+    val corchetePos1: Int = tmp3.indexOf("[", 2)
+    val corchetePos2: Int = tmp3.indexOf("]")
+    val tmp4 = tmp3.substring(corchetePos1 + 1, corchetePos2)
+    val tmp5: List[Int] = tmp4.split(",").map(_.toInt).toList
+    val tmp6 = tmp5.map(x => field.builder(x))
+    val poly1 = fromListToPol(tmp6)
+
+
+    poly1
   }
 
 
@@ -213,33 +219,21 @@ class PolynomialsOverFp private(val field: Fp)  {
       if (degree == -1) field.zero else this.map(degree)
     }
 
-
-
     val isMonic: Boolean = lc == field.one
 
     type Monomial = (Int, T0)
 
-
     val lt: Monomial = if (degree == -1) (0, field.zero) else (degree, lc)
-
 
     def monomialDivision(dividendo: Monomial, divisor: Monomial): Polynomial = {
       builder(Map(dividendo._1 - divisor._1 -> dividendo._2.divide(divisor._2)))
     }
-
-
-    // Ver https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclid.27s_algorithm
-    // TODO Hacer bien la división de polinomios
-
-
 
     def divide(other: T2): (T2, T2) = {
 
       val dividendoOrigen = this
       val divisor = other
       val cocienteAcum = zero
-
-
 
       def loop(dividendo: Polynomial, divisor: Polynomial, cocienteAcum: Polynomial): ( Polynomial, Polynomial) = {
 
@@ -256,10 +250,6 @@ class PolynomialsOverFp private(val field: Fp)  {
 
       loop(dividendoOrigen, divisor, cocienteAcum)
     }
-
-
-
-
 
     def divide(other: T0): (T2, T2) = {
 
