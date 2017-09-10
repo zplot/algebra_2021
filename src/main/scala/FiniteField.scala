@@ -1,6 +1,7 @@
 package algebra
 import algebra.Utils._
 
+/*
 
 
 case class FiniteField(p: Int, w: Int) extends Field {
@@ -94,3 +95,7 @@ case class FiniteField(p: Int, w: Int) extends Field {
   }
 
 }
+
+
+
+*/

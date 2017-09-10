@@ -5,6 +5,9 @@ import algebra.Utils._
 /**
   * builder of a T2 Ring over finite field
   */
+
+/*
+
 object PolynomialsOverFiniteField {
 
   def apply(field: FiniteField): PolynomialsOverFiniteField = {
@@ -13,10 +16,16 @@ object PolynomialsOverFiniteField {
 
 }
 
+*/
 
 /**
   * builder of a T2 Ring over field
   */
+
+
+/*
+
+
 class PolynomialsOverFiniteField private(val field: FiniteField) {
 
   def builderFromMap(map: field.polyRing.T1): field.FiniteFieldElement = field.builder(field.polyRing.builder(map))
@@ -356,3 +365,4 @@ class PolynomialsOverFiniteField private(val field: FiniteField) {
   }
 }
 
+*/

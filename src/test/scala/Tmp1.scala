@@ -5,6 +5,11 @@ import algebra._
 import Utils._
 
 
+
+/*
+
+
+
 object Tmp1 extends App {
 
   println("Empezamos Polynomials Over a Field")
@@ -121,3 +126,8 @@ object Tmp1 extends App {
 
 
 }
+
+
+
+
+*/

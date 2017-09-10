@@ -18,10 +18,10 @@ class PolynomialsOverFp private(val field: Fp)  {
   type T1 = Map[Int, T0]
   type T2 = Polynomial
 
-  // takes a Map[Int, Int] and builds a Polynomial
+  // takes a Map[Int, T0] and builds a Polynomial
   def builder(x: T1): T2 = Polynomial(x)
 
-  /* TODO
+   //TODO Usar polinomios de Conway?
 
   def findAllIrredPol(degree: Int): List[T2] = {
 
@@ -32,7 +32,7 @@ class PolynomialsOverFp private(val field: Fp)  {
       builder(ourMap)
     }
 
-    val listOfFieldElements = (0 until field.p).toList
+    val listOfFieldElements = (0 until field.p).map(field.builder).toList
     val listOflists = combinations[field.FpElement](degree + 1, listOfFieldElements)
     val listOflistsDrop0 = listOflists.tail
     val listOfPolys = listOflistsDrop0 map (x => fromListToPoly(x))
@@ -47,7 +47,7 @@ class PolynomialsOverFp private(val field: Fp)  {
 
   def findIrredPolProb(degree: Int): T2 = {
 
-    def fromListToPolynomial(list: List[Int]) = {
+    def fromListToPolynomial(list: List[T0]) = {
       val listOfElements = list
       val oneTwoThree = list.indices.toList.reverse
       val quasiMap = oneTwoThree zip listOfElements
@@ -60,7 +60,7 @@ class PolynomialsOverFp private(val field: Fp)  {
     def genPolynomial = {
       val sequence = for (i <- 1 to degree) yield randomP(p)
       val list = sequence.toList
-      val listExtended = 1 :: list
+      val listExtended = (1 :: list).map(field.builder)
       val polynomial = fromListToPolynomial(listExtended)
       polynomial
     }
@@ -77,7 +77,6 @@ class PolynomialsOverFp private(val field: Fp)  {
     loop
   }
 
-  */
 
 
   // See Victor Shoup pag. 472
@@ -132,16 +131,21 @@ class PolynomialsOverFp private(val field: Fp)  {
 
     def apply(map: T1): T2 = {
 
+
       val normalMap: T1 = {
-        val theMapList = map.toList
+        val theMapList = map.toList.filter(x => x._1 != 0 || x._2 != field.zero)
         def newMapList(oldMapList: List[(Int, T0)]): List[(Int, T0)] = oldMapList match {
           case Nil => Nil
+
+          case ((0, field.zero) :: Nil) => (0, field.zero) :: Nil
           case ((x1, field.zero) :: xs) => newMapList(xs)
           case ((x1, x2) :: xs)  => (x1, x2) :: newMapList(xs)
         }
         val theNewMapList = newMapList(theMapList)
         val theNewMap = theNewMapList.toMap
+
         theNewMap
+
       }
       new Polynomial(normalMap)
     }
@@ -179,6 +183,7 @@ class PolynomialsOverFp private(val field: Fp)  {
     def minus(other: T2): T2 = this.add(other * field.builder(field.p - 1))
 
     def multiply(other: T2): T2 = {
+
       val step1: List[(Int, T0)] = for (i <- this.map.toList; j <- other.map.toList) yield (i._1 + j._1, i._2 * j._2)
       val exponents: List[Int] = step1.map(x => x._1).distinct
       val step2: List[List[(Int, T0)]] = for (i <- exponents) yield step1.filter(x => x._1 == i)
@@ -204,38 +209,44 @@ class PolynomialsOverFp private(val field: Fp)  {
       if (this.map == Map(0 -> field.zero) || this.map == Map[Int, T0]()) -1 else step1.max
     }
 
-
-
     val lc: T0 = {
       if (degree == -1) field.zero else this.map(degree)
     }
 
-    val lt: Polynomial = builder(Map(degree -> lc))
+
 
     val isMonic: Boolean = lc == field.one
 
     type Monomial = (Int, T0)
 
-    def monomialDivision(dividendo: Monomial, divisor: Monomial): Monomial = {
-      (dividendo._1 - divisor._1, dividendo._2.divide(divisor._2))
+
+    val lt: Monomial = if (degree == -1) (0, field.zero) else (degree, lc)
+
+
+    def monomialDivision(dividendo: Monomial, divisor: Monomial): Polynomial = {
+      builder(Map(dividendo._1 - divisor._1 -> dividendo._2.divide(divisor._2)))
     }
-
-
 
 
     // Ver https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclid.27s_algorithm
     // TODO Hacer bien la división de polinomios
+
+
+
     def divide(other: T2): (T2, T2) = {
 
-      val dividendo = this
+      val dividendoOrigen = this
       val divisor = other
       val cocienteAcum = zero
+
+
 
       def loop(dividendo: Polynomial, divisor: Polynomial, cocienteAcum: Polynomial): ( Polynomial, Polynomial) = {
 
         if (dividendo.degree < divisor.degree) (cocienteAcum, dividendo) else {
-          val nuevoCocienteAcum: Polynomial = cocienteAcum + ???
-          val nuevoDividendo: Polynomial = dividendo - divisor * cocienteAcum
+          val nuevoCocienteAcum: Polynomial = cocienteAcum + monomialDivision(dividendo.lt, divisor.lt)
+          val tmp1 = divisor * nuevoCocienteAcum
+          val nuevoDividendo: Polynomial = dividendoOrigen - tmp1
           loop(nuevoDividendo, divisor, nuevoCocienteAcum)
 
         }
@@ -243,12 +254,12 @@ class PolynomialsOverFp private(val field: Fp)  {
 
 
 
-
-
-
-
-      (other,other)
+      loop(dividendoOrigen, divisor, cocienteAcum)
     }
+
+
+
+
 
     def divide(other: T0): (T2, T2) = {
 
@@ -258,7 +269,10 @@ class PolynomialsOverFp private(val field: Fp)  {
 
     }
 
-    def multiply(other: T0): T2 = this.multiply(builder(Map(0 -> other)))
+    def multiply(other: T0): T2 = {
+      val tmp1 = builder(Map(0 -> other))
+      this.multiply(tmp1)
+    }
 
     def *(other: T2): T2 = this.multiply(other)
     def *(other: T0): T2 = this.multiply(other)
@@ -281,8 +295,6 @@ class PolynomialsOverFp private(val field: Fp)  {
         new T2(finalMap)
       }
     }
-
-
 
     def mod(h: T2): T2 = this.divide(h)._2
 
