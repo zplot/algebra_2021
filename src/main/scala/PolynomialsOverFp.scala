@@ -1,6 +1,8 @@
 package algebra
+
 import algebra.Utils._
 import scala.io.{BufferedSource, Source}
+import scala.language.implicitConversions
 
 /**
   * builder of a Polynomial Ring over Fp
@@ -66,9 +68,7 @@ class PolynomialsOverFp private(val field: Fp)  {
     }
 
     val bufferedSource: BufferedSource = Source.fromFile("allConwayPolynomials.txt")
-
     val tmp2: List[String] = bufferedSource.getLines.filter(s => pleidafun(s) == field.p && nleidafun(s) == n).toList
-
     bufferedSource.close
 
     val tmp3: String = tmp2.head
@@ -78,8 +78,6 @@ class PolynomialsOverFp private(val field: Fp)  {
     val tmp5: List[Int] = tmp4.split(",").map(_.toInt).toList
     val tmp6 = tmp5.map(x => field.builder(x))
     val poly1 = fromListToPol(tmp6)
-
-
     poly1
   }
 
@@ -127,7 +125,6 @@ class PolynomialsOverFp private(val field: Fp)  {
     loop (h, exponent, h)
   }
 
-
   /**
     * builder of a Polynomial belonging to the polynomial ring
     */
@@ -137,8 +134,8 @@ class PolynomialsOverFp private(val field: Fp)  {
 
     def apply(map: T1): T2 = {
 
-
       val normalMap: T1 = {
+
         val theMapList = map.toList.filter(x => x._1 != 0 || x._2 != field.zero)
         def newMapList(oldMapList: List[(Int, T0)]): List[(Int, T0)] = oldMapList match {
           case Nil => Nil
@@ -149,9 +146,7 @@ class PolynomialsOverFp private(val field: Fp)  {
         }
         val theNewMapList = newMapList(theMapList)
         val theNewMap = theNewMapList.toMap
-
         theNewMap
-
       }
       new Polynomial(normalMap)
     }
