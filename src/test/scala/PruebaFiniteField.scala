@@ -43,13 +43,23 @@ object PruebaFiniteField  extends App {
 
   val poly2: cuerpo.T2 = cuerpo.builder(Map(3 -> tres))
 
-  val poly3: cuerpo.T2 = cuerpo.builder(Map(0 -> dos, 1 -> dos, 2 -> dos))
+  val poly3: cuerpo.T2 = cuerpo.builder(Map(0 -> convert1(4), 1 -> dos, 2 -> convert1(1)))
 
-  val poly4: cuerpo.T2 = cuerpo.builder(Map(0 -> convert1(5), 1 -> convert1(5), 2 -> convert1(5)))
+  val poly4: cuerpo.T2 = cuerpo.builder(Map(0 -> convert1(1), 1 -> convert1(2), 2 -> convert1(3)))
 
   println(poly3)
 
   println(cuerpo.h.isIrreducible)
+
+  println("poly3 = " + poly3)
+  println("poly4 = " + poly4)
+
+  println("Suma = " + (poly3 + poly4))
+  println("Resta = " + poly3.minus(poly4))
+  println("Producto = " + poly3 * poly4)
+  println("División = " + (poly3 / poly4))
+
+
 
 
 

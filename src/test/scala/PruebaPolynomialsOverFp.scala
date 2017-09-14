@@ -76,10 +76,21 @@ object PruebaPolynomialsOverFp extends App {
   println("cuerpo = " + anillo.field)
   println(cosa1)
 
+  println("Empezamos2")
 
 
 
+  val poly11 = anillo.builder(Map(0 -> 6, 1 -> 4, 2 -> 5))
+  val poly12 = anillo.builder(Map(0 -> 1, 1 -> 2))
 
+  println("poly11 = " + poly11)
+  println("poly12 = " + poly12)
+
+
+  val cociente1 = poly11/poly12
+
+
+  println("poly11/poly12 = " + cociente1)
 
 
 
