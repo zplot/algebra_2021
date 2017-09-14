@@ -322,7 +322,6 @@ class PolynomialsOverFp private(val field: Fp)  {
         case x :: xs if x._1 == 1 => x._2 + "x" + " + " + printPol(xs)
         case x :: xs if x._2 == field.one => "x" + x._1 + " + " + printPol(xs)
         case x :: xs => x._2 + "x" + x._1 + " + " + printPol(xs)
-        //"hola hola 189"
       }
       if (this == zero) "0" else printPol(this.map.toList.sortWith(Polynomial.comp)).dropRight(3)
       //map.toString()

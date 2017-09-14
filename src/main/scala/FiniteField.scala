@@ -47,13 +47,13 @@ case class FiniteField(p: Int, w: Int) extends Field {
       cond0 || cond1
     }
 
-    def add(other: T2) = builder((f + other.f).mod(h))
+    def add(other: T2): FiniteFieldElement = builder((f + other.f).mod(h))
 
-    def minus(other: T2) = builder((f - other.f).mod(h))
+    def minus(other: T2): FiniteFieldElement = builder((f - other.f).mod(h))
 
     def negate: T2 = builder((h - f).mod(h))
 
-    def multiply(other: T2) = builder((f * other.f).mod(h))
+    def multiply(other: T2): FiniteFieldElement = builder((f * other.f).mod(h))
 
     def power(p: Int): T2 = p match {
       case 0 => one
@@ -72,7 +72,8 @@ case class FiniteField(p: Int, w: Int) extends Field {
       }
     }
 
-    override def toString = "(" + "(" + f.toString + ") mod h)"
+    //override def toString = "(" + "(" + f.toString + ") mod h)"
+    override def toString = "(" + "(" + f.toString + ") mod "+ h.toString + ")"
 
     override def equals(other: Any): Boolean = {
       val that = other.asInstanceOf[FiniteFieldElement]
