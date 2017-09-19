@@ -43,11 +43,11 @@ object PruebaFiniteField  extends App {
 
   val poly1: cuerpo.T2 = cuerpo.builder(tmp3)
 
-  val poly2: cuerpo.T2 = cuerpo.builder(Map(3 -> tres))
+  val poly2: cuerpo.T2 = Map(3 -> 3)
 
-  val poly3: cuerpo.T2 = cuerpo.builder(Map(0 -> convert1(6), 1 -> convert1(4), 2 -> convert1(5)))
+  val poly3: cuerpo.T2 = Map(0 -> 6, 1 -> 4, 2 -> 5)
 
-  val poly4: cuerpo.T2 = cuerpo.builder(Map(0 -> convert1(1), 1 -> convert1(2), 2 -> convert1(0)))
+  val poly4: cuerpo.T2 = Map(0 -> 1, 1 -> 2, 2 -> 0)
 
   val poly4bis: cuerpo.T2 = Map(0 -> 1, 1 -> 2, 2 -> 0)
 
@@ -71,7 +71,7 @@ object PruebaFiniteField  extends App {
   println("Prueba de la división = " + (poly3 / poly4) * poly4)
   println("poly3 * inverso de poly4 = " + poly3 * poly4.inverse)
   println("Prueba de la división = " + poly4 * poly3 * poly4.inverse)
-  println("Son iguales poly y poly4bis = " + (poly4 == poly4bis))
+  println("Son iguales poly4 y poly4bis = " + (poly4 == poly4bis))
 
 
 

@@ -1,0 +1,2 @@
+Construir un iterator para FiniteFied
+Hallar elementos primitivos de un FiniteField

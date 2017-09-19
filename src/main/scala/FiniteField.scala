@@ -1,8 +1,15 @@
 package algebra
 import algebra.Utils._
+import scala.language.implicitConversions
+
 
 case class FiniteField(p: Int, w: Int) extends Field {
   require(isPrime(p), p + " is not a prime number")
+
+
+
+
+
 
 
   val numElements: Int = Utils.power(p, w)
@@ -17,6 +24,9 @@ case class FiniteField(p: Int, w: Int) extends Field {
 
   // takes a polynomial in polyRing and builds a FiniteFieldElement
   def builder(x: T1): T2 = FiniteFieldElement(x)
+
+
+
 
 
 
@@ -60,8 +70,6 @@ case class FiniteField(p: Int, w: Int) extends Field {
       case 1 => this
       case p if p % 2 == 1 => this * (this * this).power((p - 1) / 2)
       case p if p % 2 == 0 => (this * this).power(p / 2)
-      //case p if p % 2 == 1 => this * (this * this).power((p - 1) / 2)
-      //case p if p % 2 == 0 => (this * this).power(p / 2)
     }
 
     def inverse: T2 = {
@@ -73,7 +81,7 @@ case class FiniteField(p: Int, w: Int) extends Field {
     }
 
     //override def toString = "(" + "(" + f.toString + ") mod h)"
-    override def toString = "(" + "(" + f.toString + ") mod "+ h.toString + ")"
+    override def toString: String = "(" + "(" + f.toString + ") mod "+ h.toString + ")"
 
     override def equals(other: Any): Boolean = {
       val that = other.asInstanceOf[FiniteFieldElement]
