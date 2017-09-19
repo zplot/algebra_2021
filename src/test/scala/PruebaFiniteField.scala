@@ -1,7 +1,8 @@
 package algebra
 
-import scala.language.implicitConversions
+import algebra.PruebaFiniteField.cuerpo
 
+import scala.language.implicitConversions
 import algebra.Utils.IntMap
 
 
@@ -16,14 +17,15 @@ object PruebaFiniteField  extends App {
   implicit def convert2(x: Map[Int,cuerpo.baseField.T2]): cuerpo.polyRing.T1 = x.asInstanceOf[cuerpo.polyRing.T1]
   implicit def convert3(x: Map[Int, cuerpo.baseField.FpElement]): cuerpo.polyRing.T2 = cuerpo.polyRing.builder(x.asInstanceOf[cuerpo.polyRing.T1])
 
-  /*implicit def convert4(x: Map[Int, Int]): cuerpo.T1 = {
-    val tmp1 = x.toList
-    def convert5(x: Int): cuerpo.baseField.T2 = cuerpo.baseField.builder(x)
-    val tmp2 = tmp1.map(x => (x._1, convert5(x._2))).asInstanceOf[cuerpo.T1]
-    tmp2
-  }*/
 
-
+  implicit def convert4(x: Map[Int, Int]): cuerpo.T2 = {
+    val tmp1: List[(Int, Int)] = x.toList
+    val tmp2: List[(Int, cuerpo.baseField.FpElement)] = tmp1.map(x => (x._1, convert1(x._2)))
+    val tmp3 = tmp2.toMap
+    val tmp4: cuerpo.polyRing.T2 = cuerpo.polyRing.builder(tmp3)
+    val tmp5: cuerpo.T2 = cuerpo.builder(tmp4)
+    tmp5
+  }
 
 
 
@@ -47,6 +49,10 @@ object PruebaFiniteField  extends App {
 
   val poly4: cuerpo.T2 = cuerpo.builder(Map(0 -> convert1(1), 1 -> convert1(2), 2 -> convert1(0)))
 
+  val poly4bis: cuerpo.T2 = Map(0 -> 1, 1 -> 2, 2 -> 0)
+
+  val poly5: cuerpo.T2 = Map(3 -> 3)
+
   println(poly3)
 
   println(cuerpo.h.isIrreducible)
@@ -65,6 +71,7 @@ object PruebaFiniteField  extends App {
   println("Prueba de la división = " + (poly3 / poly4) * poly4)
   println("poly3 * inverso de poly4 = " + poly3 * poly4.inverse)
   println("Prueba de la división = " + poly4 * poly3 * poly4.inverse)
+  println("Son iguales poly y poly4bis = " + (poly4 == poly4bis))
 
 
 
