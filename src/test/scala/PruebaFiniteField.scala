@@ -73,6 +73,12 @@ object PruebaFiniteField  extends App {
   println("Prueba de la división = " + poly4 * poly3 * poly4.inverse)
   println("Son iguales poly4 y poly4bis = " + (poly4 == poly4bis))
 
+  println("Empezamos 2")
+
+  val poly6: cuerpo.T2 = Map(0 -> 1, 1 -> 2, 2 -> 0)
+
+
+
 
 
 

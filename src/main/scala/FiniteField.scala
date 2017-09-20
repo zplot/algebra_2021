@@ -8,10 +8,6 @@ case class FiniteField(p: Int, w: Int) extends Field {
 
 
 
-
-
-
-
   val numElements: Int = Utils.power(p, w)
   val baseField: Fp = Fp(p)
   val polyRing: PolynomialsOverFp = PolynomialsOverFp(baseField)
@@ -45,6 +41,17 @@ case class FiniteField(p: Int, w: Int) extends Field {
     }
   }
 
+  // TODO
+  def primitiveElement: T2 = ???
+
+  // TODO
+  def allElements: Iterable[T2] = ???
+
+  //TODO
+  def fromVectorToPoly(coordinates: Vector[baseField.T2]): T2 = ???
+
+
+
   class FiniteFieldElement private(val f: T1) extends FieldElement {
 
     val fatherFiniteField: FiniteField = FiniteField.this
@@ -55,6 +62,15 @@ case class FiniteField(p: Int, w: Int) extends Field {
       val cond0: Boolean = this == zero
       val cond1: Boolean = coefficients.toList.forall(x => x == polyRing.field.zero)
       cond0 || cond1
+    }
+
+    val vector: Vector[polyRing.T0]  = {
+      val tmp0: List[Int] = (0 to w - 1).toList
+      def fromExpToCoef(x: Int): polyRing.T0 = if (this.f.map.contains(x)) this.f.map(x) else polyRing.field.zero
+      val tmp1: List[polyRing.T0] = tmp0.map(x => fromExpToCoef(x))
+      val tmp2 = tmp1.toVector
+      println("Vector = " + tmp2)
+      tmp2
     }
 
     def add(other: T2): FiniteFieldElement = builder((f + other.f).mod(h))
