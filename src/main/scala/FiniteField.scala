@@ -21,24 +21,36 @@ case class FiniteField(p: Int, w: Int) extends Field {
   // takes a polynomial in polyRing and builds a FiniteFieldElement
   def builder(x: T1): T2 = FiniteFieldElement(x)
 
-
-
-
+  // takes a vector and builds a FiniteFieldElement
+  def builder(x: Vector[polyRing.T0]): T2 = FiniteFieldElement(x)
 
 
   val structureId: String = "Fq(" + Utils.power(p, w).toString + ")"
   val finite: Boolean = true
-  val zero = builder(polyRing.zero)
-  val one = identity
+  val zero: FiniteFieldElement = builder(polyRing.zero)
+  val one: FiniteFieldElement = identity
 
   override def toString = structureId
 
 
   object FiniteFieldElement {
-    def apply(f: T1) = {
+
+    def apply(f: T1): FiniteFieldElement = {
       val g: T1 = f.mod(h)
       new FiniteFieldElement(g)
     }
+
+    def apply(v: Vector[polyRing.T0]): FiniteFieldElement = {
+      val step0 = 0 to w -1
+      val step1 = step0 zip v
+      val step2: Map[Int, polyRing.T0] = step1.toMap
+      val step3 = polyRing.builder(step2)
+      val step4: T1 = step3.mod(h)
+      new FiniteFieldElement(step4)
+    }
+
+
+
   }
 
   // TODO

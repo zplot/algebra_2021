@@ -27,6 +27,8 @@ object PruebaFiniteField  extends App {
     tmp5
   }
 
+  implicit def convert5(x: Int): cuerpo.polyRing.T0 = cuerpo.polyRing.field.builder(x)
+
 
 
   val tres: cuerpo.baseField.T2 = cuerpo.baseField.builder(3)
@@ -75,7 +77,17 @@ object PruebaFiniteField  extends App {
 
   println("Empezamos 2")
 
+
+
   val poly6: cuerpo.T2 = Map(0 -> 1, 1 -> 2, 2 -> 0)
+
+  val cuatro: cuerpo.polyRing.T0 = cuerpo.polyRing.field.builder(4)
+
+  val vector7: Vector[cuerpo.polyRing.T0] = Vector(3, 5, 6)
+
+  val poly7: cuerpo.T2 = cuerpo.builder(vector7)
+
+  println(poly7)
 
 
 
