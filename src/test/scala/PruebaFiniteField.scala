@@ -10,7 +10,7 @@ import algebra.Utils.IntMap
 object PruebaFiniteField  extends App {
   println("Empezamos")
 
-  val cuerpo = FiniteField(7,3)
+  val cuerpo = FiniteField(7,4)
 
 
   implicit def convert1(x: Int): cuerpo.baseField.T2 = cuerpo.baseField.builder(x)
@@ -83,7 +83,7 @@ object PruebaFiniteField  extends App {
 
   val cuatro: cuerpo.polyRing.T0 = cuerpo.polyRing.field.builder(4)
 
-  val vector7: Vector[cuerpo.polyRing.T0] = Vector(3, 5, 6)
+  val vector7: Vector[cuerpo.polyRing.T0] = Vector(3, 5, 6, 2)
 
   val poly7: cuerpo.T2 = cuerpo.builder(vector7)
 

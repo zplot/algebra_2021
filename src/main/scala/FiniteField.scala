@@ -81,7 +81,6 @@ case class FiniteField(p: Int, w: Int) extends Field {
       def fromExpToCoef(x: Int): polyRing.T0 = if (this.f.map.contains(x)) this.f.map(x) else polyRing.field.zero
       val tmp1: List[polyRing.T0] = tmp0.map(x => fromExpToCoef(x))
       val tmp2 = tmp1.toVector
-      println("Vector = " + tmp2)
       tmp2
     }
 
