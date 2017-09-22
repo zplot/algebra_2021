@@ -10,7 +10,7 @@ import algebra.Utils._
 object PruebaFiniteField  extends App {
   println("Empezamos")
 
-  val cuerpo = FiniteField(7,3)
+  val cuerpo = FiniteField(2,2)
 
 
   implicit def convert1(x: Int): cuerpo.baseField.T2 = cuerpo.baseField.builder(x)

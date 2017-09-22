@@ -54,10 +54,12 @@ case class FiniteField(p: Int, w: Int) extends Field {
 
 
   def isPrimitiveElement(x: T2): Boolean = {
-    val divisores: List[Int] = Utils.divisors(numElements - 1)
-    val divisoresBien = divisores.drop(1).reverse.drop(1).reverse
-    val step1: List[Boolean] = divisoresBien.map(k => x.power(k) != one)
-    step1.forall( x => x == true)
+    if (x == zero || x == one) false else {
+      val divisores: List[Int] = Utils.divisors(numElements - 1)
+      val divisoresBien = divisores.drop(1).reverse.drop(1).reverse
+      val step1: List[Boolean] = divisoresBien.map(k => x.power(k) != one)
+      step1.forall( x => x == true)
+    }
   }
 
 
