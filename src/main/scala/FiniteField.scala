@@ -1,5 +1,7 @@
 package algebra
 import algebra.Utils._
+
+import scala.collection.immutable
 import scala.language.implicitConversions
 
 
@@ -48,19 +50,33 @@ case class FiniteField(p: Int, w: Int) extends Field {
       val step4: T1 = step3.mod(h)
       new FiniteFieldElement(step4)
     }
-
-
-
   }
 
-  // TODO
-  def primitiveElement: T2 = ???
 
-  // TODO
-  def allElements: Iterable[T2] = ???
+  def isPrimitiveElement(x: T2): Boolean = {
+    val divisores: List[Int] = Utils.divisors(numElements - 1)
+    val divisoresBien = divisores.drop(1).reverse.drop(1).reverse
+    val step1: List[Boolean] = divisoresBien.map(k => x.power(k) != one)
+    step1.forall( x => x == true)
+  }
 
-  //TODO
-  def fromVectorToPoly(coordinates: Vector[baseField.T2]): T2 = ???
+
+  def elements: List[FiniteFieldElement] = {
+    def combinations(size: Int) : List[List[polyRing.T0]] = {
+      if (size == 0)
+        List(List())
+      else {
+        for {
+          x  <- (0 to p -1).toList.map(x => polyRing.field.builder(x))
+          xs <- combinations(size-1)
+        } yield x :: xs
+      }
+    }
+    val step1 = combinations(w)
+    val step2 = step1.map(x => x.toVector)
+    val step3 = step2.map(x => builder(x))
+    step3
+  }
 
 
 

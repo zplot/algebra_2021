@@ -15,13 +15,7 @@ object Utils {
     }
   }
 
-    // TODO Esto no funciona
-//  def powerGeneric[A <: Group#T2]( n: A, p: Int): A = p match {
-//    case 0 => n * n.inverse
-//    case 1 => n
-//    case p if p % 2 == 1 => n * powerGeneric(n * n, (p - 1) / 2)
-//    case p if p % 2 == 0 => powerGeneric(n * n, p / 2)
-//  }
+
 
 
   // Random integer between 0 and p - 1
@@ -92,6 +86,17 @@ object Utils {
 
   /** Is 'n' a prime number? */
   def isPrime(n: Int) = divisors(n).length == 2
+
+  def combinations(size: Int, r: Int) : List[List[Int]] = {
+    if (size == 0)
+      List(List())
+    else {
+      for {
+        x  <- (0 to r - 1).toList
+        xs <- combinations(size-1, r)
+      } yield x :: xs
+    }
+  }
 
 }
 

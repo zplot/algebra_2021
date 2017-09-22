@@ -291,7 +291,6 @@ class PolynomialsOverFp private(val field: Fp)  {
 
         val exponent = math.pow(field.p, degree).toInt
         val xToPn = exp(x, exponent)
-        //xToPn.mod(this) == x.mod(this)
         val xToPnMinusX = xToPn - x
         val tmp2 = xToPnMinusX.mod(this) == zero
         tmp2

@@ -3,14 +3,14 @@ package algebra
 import algebra.PruebaFiniteField.cuerpo
 
 import scala.language.implicitConversions
-import algebra.Utils.IntMap
+import algebra.Utils._
 
 
 
 object PruebaFiniteField  extends App {
   println("Empezamos")
 
-  val cuerpo = FiniteField(7,4)
+  val cuerpo = FiniteField(7,3)
 
 
   implicit def convert1(x: Int): cuerpo.baseField.T2 = cuerpo.baseField.builder(x)
@@ -57,7 +57,7 @@ object PruebaFiniteField  extends App {
 
   println(poly3)
 
-  println(cuerpo.h.isIrreducible)
+  // println(cuerpo.h.isIrreducible)
 
   println("poly3 = " + poly3)
   println("poly4 = " + poly4)
@@ -88,6 +88,22 @@ object PruebaFiniteField  extends App {
   val poly7: cuerpo.T2 = cuerpo.builder(vector7)
 
   println(poly7)
+
+  println("Sección 3")
+
+  val todos = cuerpo.elements
+
+  println("todos = " + todos)
+
+  println("poly7 = " + poly7)
+  println("poly7 is primitive = " + cuerpo.isPrimitiveElement(poly7))
+
+  val primis = cuerpo.elements.filter(x => cuerpo.isPrimitiveElement(x))
+  println("primis = " + primis)
+  println("número de primis = " + primis.length)
+  println("número de elementos = " + cuerpo.elements.length)
+
+
 
 
 
