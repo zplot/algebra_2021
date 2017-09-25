@@ -10,7 +10,7 @@ import algebra.Utils._
 object PruebaFiniteField  extends App {
   println("Empezamos")
 
-  val cuerpo = FiniteField(2,2)
+  val cuerpo = FiniteField(3,2)
 
 
   implicit def convert1(x: Int): cuerpo.baseField.T2 = cuerpo.baseField.builder(x)
@@ -103,7 +103,64 @@ object PruebaFiniteField  extends App {
   println("número de primis = " + primis.length)
   println("número de elementos = " + cuerpo.elements.length)
 
+  val z1 = cuerpo.elements
+  val z2 = z1.map(x => x.power(cuerpo.numElements) - x)
+  val z3 = z2.forall(x => x == cuerpo.zero)
 
+  println("z3 = " + z3)
+
+
+  println("Sección 4")
+
+  def ecuacion(x: cuerpo.FiniteFieldElement, y: cuerpo.FiniteFieldElement): cuerpo.FiniteFieldElement = x.power(2) + y.power(2) - cuerpo.one
+
+  val step1 = for (i <- cuerpo.elements; j <- cuerpo.elements) yield {
+    println("i = " + i)
+    println("j = " + j)
+    println("i^2 = " + i.power(2))
+    println("j^2 = " + j.power(2))
+    println("i^2 + j^2 = " + (i.power(2) + j.power(2)))
+    println("ecuacion(i, j) == cuerpo.zero = " + (ecuacion(i, j) == cuerpo.zero))
+
+    if (ecuacion(i, j) == cuerpo.zero) 1 else 0
+  }
+
+  println("Número de soluciones = " + step1.filter(x => x == 1).length)
+
+  println("Sección 5")
+
+  val cuerpoFp = FiniteField(7,1)
+
+
+  implicit def qconvert1(x: Int): cuerpoFp.baseField.T2 = cuerpoFp.baseField.builder(x)
+  implicit def qconvert2(x: Map[Int,cuerpoFp.baseField.T2]): cuerpoFp.polyRing.T1 = x.asInstanceOf[cuerpoFp.polyRing.T1]
+  implicit def qconvert3(x: Map[Int, cuerpoFp.baseField.FpElement]): cuerpoFp.polyRing.T2 = cuerpoFp.polyRing.builder(x.asInstanceOf[cuerpoFp.polyRing.T1])
+
+
+  implicit def qconvert4(x: Map[Int, Int]): cuerpoFp.T2 = {
+    val tmp1: List[(Int, Int)] = x.toList
+    val tmp2: List[(Int, cuerpoFp.baseField.FpElement)] = tmp1.map(x => (x._1, qconvert1(x._2)))
+    val tmp3 = tmp2.toMap
+    val tmp4: cuerpoFp.polyRing.T2 = cuerpoFp.polyRing.builder(tmp3)
+    val tmp5: cuerpoFp.T2 = cuerpoFp.builder(tmp4)
+    tmp5
+  }
+
+  implicit def qconvert5(x: Int): cuerpoFp.polyRing.T0 = cuerpoFp.polyRing.field.builder(x)
+
+
+
+  val e1: cuerpo.T2 = Map(0 -> 1)
+  val e2: cuerpo.T2 = Map(0 -> 2)
+  val e3: cuerpo.T2 = Map(0 -> 3)
+  val e4: cuerpo.T2 = Map(0 -> 4)
+  val e5: cuerpo.T2 = Map(0 -> 5)
+  val e6: cuerpo.T2 = Map(0 -> 6)
+
+  println(e2 + e3)
+  println(e2 * e3)
+  println(e2 / e3)
+  println(e2.inverse)
 
 
 
