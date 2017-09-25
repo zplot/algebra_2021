@@ -127,9 +127,12 @@ object PruebaFiniteField  extends App {
 
   println("Número de soluciones = " + step1.filter(x => x == 1).length)
 
+
+
+
   println("Sección 5")
 
-  val cuerpoFp = FiniteField(7,1)
+  val cuerpoFp = FiniteField(13,1)
 
 
   implicit def qconvert1(x: Int): cuerpoFp.baseField.T2 = cuerpoFp.baseField.builder(x)
@@ -150,17 +153,32 @@ object PruebaFiniteField  extends App {
 
 
 
-  val e1: cuerpo.T2 = Map(0 -> 1)
-  val e2: cuerpo.T2 = Map(0 -> 2)
-  val e3: cuerpo.T2 = Map(0 -> 3)
-  val e4: cuerpo.T2 = Map(0 -> 4)
-  val e5: cuerpo.T2 = Map(0 -> 5)
-  val e6: cuerpo.T2 = Map(0 -> 6)
+  val e1: cuerpoFp.T2 = Map(0 -> 1)
+  val e2: cuerpoFp.T2 = Map(0 -> 2)
+  val e3: cuerpoFp.T2 = Map(0 -> 3)
+  val e4: cuerpoFp.T2 = Map(0 -> 4)
+  val e5: cuerpoFp.T2 = Map(0 -> 5)
+  val e6: cuerpoFp.T2 = Map(0 -> 6)
 
   println(e2 + e3)
   println(e2 * e3)
   println(e2 / e3)
   println(e2.inverse)
+
+  def ecuacionFp(x: cuerpoFp.FiniteFieldElement, y: cuerpoFp.FiniteFieldElement): cuerpoFp.FiniteFieldElement = x.power(2) + y.power(2) - cuerpoFp.one
+
+  val step1Fp = for (i <- cuerpoFp.elements; j <- cuerpoFp.elements) yield {
+    println("i = " + i)
+    println("j = " + j)
+    println("i^2 = " + i.power(2))
+    println("j^2 = " + j.power(2))
+    println("i^2 + j^2 = " + (i.power(2) + j.power(2)))
+    println("ecuacion(i, j) == cuerpoFp.zero = " + (ecuacionFp(i, j) == cuerpoFp.zero))
+
+    if (ecuacionFp(i, j) == cuerpoFp.zero) 1 else 0
+  }
+
+  println("Número de soluciones = " + step1Fp.filter(x => x == 1).length)
 
 
 
