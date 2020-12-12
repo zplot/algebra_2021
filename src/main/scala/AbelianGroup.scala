@@ -10,24 +10,20 @@ trait AbelianGroup {
   val structureId: String
   val zero: T2
 
-
   override def toString: String = structureId
+}
 
-  trait AbelianGroupElement {
+trait AbelianGroupElement {
 
-    val fatherAbelianGroup = AbelianGroup.this
-    val isZero: Boolean
+  type T2
 
-    def negate: T2
-    def add(other: T2): T2
-    def +(other: T2): T2 = this.add(other)
-    def minus(other: T2): T2
-    def -(other: T2): T2 = this.minus(other)
+  val isZero: Boolean
 
-
-
-
-    override def toString: String
-  }
+  def negate: T2
+  def add(other: T2): T2
+  def +(other: T2): T2 = this.add(other)
+  def minus(other: T2): T2
+  def -(other: T2): T2 = this.minus(other)
+  def toString: String
 }
 
