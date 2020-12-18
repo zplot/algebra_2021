@@ -18,7 +18,6 @@ trait Ring {
     def -(other: T): T = this.minus(other)
     def multiply(other: T): T
     def *(other: T): T = this.multiply(other)
-    def inverse: T
 
   }
 

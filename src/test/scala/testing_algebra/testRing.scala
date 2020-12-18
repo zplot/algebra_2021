@@ -1,5 +1,6 @@
 package testing_algebra
 import algebra2.Ring
+import algebra2.Utils
 
 object Z8 extends Ring {
   type S = Int
@@ -13,7 +14,6 @@ object Z8 extends Ring {
     def add(other: T): T = new Hasta7((this.value + other.value) % 8)
     def minus(other: T): T = new Hasta7((this.value + other.value) % 8)
     def multiply(other: T): T = new Hasta7((this.value * other.value) % 8)
-    def inverse: T = new Hasta7(0 - this.value)
     override def toString: String = value.toString
   }
 
@@ -26,6 +26,9 @@ object testRing extends App {
   val cuatro = Z8.build(4)
   println(cuatro + cinco)
   println(cuatro * cinco)
+  println("hola")
+  val s = Utils.haveCommonDivisors(24, 13)
+  println(s)
 
 }
 
