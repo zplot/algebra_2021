@@ -5,12 +5,12 @@ trait Ring {
   type S // Seed
   type T // Element
 
-  val zero: Element
-  val one: Element
+  val zero: RingElement
+  val one: RingElement
 
   def build(x: S): T
 
-  trait Element {
+  trait RingElement {
 
     def add(other: T): T
     def +(other: T): T = this.add(other)

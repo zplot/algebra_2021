@@ -1,14 +1,13 @@
 package testing_algebra
-import algebra2.Ring
 import algebra2.Zn
 
 object testZn extends App {
   println("Empezamos")
 
-  val ring = new Zn(10)
+  val ring = Zn(1980)
 
 
   println(ring.zeroDivisors)
-  println(ring.units2)
+  println(ring.units)
 
 }
