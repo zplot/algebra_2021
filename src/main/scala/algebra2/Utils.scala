@@ -110,7 +110,7 @@ object Utils {
   def coprime(m: Int, n: Int): Boolean = !haveCommonDivisors(m, n)
 
   /** Is 'n' a prime number? */
-  def isPrime(n: Int): Boolean = divisors(n).length == 2
+  def isPrime(n: Int): Boolean = divisors(n).length == 1
 
   def combinations(size: Int, r: Int) : List[List[Int]] = {
     if (size == 0)

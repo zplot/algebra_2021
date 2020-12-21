@@ -3,7 +3,7 @@ package algebra2
 trait Ring {
 
   type S // Seed
-  type T // Element
+  type T // RingElement
 
   val zero: RingElement
   val one: RingElement

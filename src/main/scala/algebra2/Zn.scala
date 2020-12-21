@@ -20,7 +20,7 @@ case class Zn(m: Int) extends Ring {
   }
 
 
-  case class ZnElement(x: Int) extends Element {
+  case class ZnElement(x: Int) extends RingElement {
     val value: Int = if (x % n < 0) x + n else x
     def add(other: T): T = ZnElement((this.value + other.value) % n)
     def minus(other: T): T = ZnElement((this.value + other.value) % n)

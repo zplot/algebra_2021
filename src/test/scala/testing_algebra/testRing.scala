@@ -9,7 +9,7 @@ object Z8 extends Ring {
   val one: T = new Hasta7(1)
   def build(x: S): T = new Hasta7(x)
 
-  class Hasta7(x: Int) extends Element {
+  class Hasta7(x: Int) extends RingElement {
     val value: Int = if (x % 8 < 0) x + 8 else x
     def add(other: T): T = new Hasta7((this.value + other.value) % 8)
     def minus(other: T): T = new Hasta7((this.value + other.value) % 8)
