@@ -1,5 +1,5 @@
 package testing_algebra
-import algebra2.Utils.{coprime, divisors2, haveCommonDivisors}
+import algebra.Utils.{coprime, divisors2, haveCommonDivisors}
 
 
 

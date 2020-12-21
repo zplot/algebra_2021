@@ -1,6 +1,6 @@
 package testing_algebra
-import algebra2.Ring
-import algebra2.Utils
+import algebra.Ring
+import algebra.Utils
 
 object Z8 extends Ring {
   type S = Int

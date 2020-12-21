@@ -1,5 +1,5 @@
 package testing_algebra
-import algebra2.Zn
+import algebra.Zn
 
 object testZn extends App {
   println("Empezamos")

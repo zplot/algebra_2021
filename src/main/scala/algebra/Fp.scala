@@ -1,6 +1,6 @@
-package algebra2
+package algebra
 
-import algebra2.Utils._
+import algebra.Utils._
 
 import scala.annotation.tailrec
 

@@ -1,4 +1,4 @@
-package algebra2
+package algebra
 
 import scala.annotation.tailrec
 

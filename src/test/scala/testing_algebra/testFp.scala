@@ -1,5 +1,5 @@
 package testing_algebra
-import algebra2.Fp
+import algebra.Fp
 
 
 

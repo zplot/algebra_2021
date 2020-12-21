@@ -1,6 +1,6 @@
-package algebra2
+package algebra
 
-import algebra2.Utils.{coprime, divisors}
+import algebra.Utils.{coprime, divisors}
 
 case class Zn(m: Int) extends Ring {
 
