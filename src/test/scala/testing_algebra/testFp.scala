@@ -15,6 +15,8 @@ object testFp extends App {
   println(cuerpo.one)
   println(c14)
   println(c14 == cuerpo.one)
+  println(nueve.inverse)
+  println(nueve * nueve.inverse)
 
 
 

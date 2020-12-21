@@ -16,14 +16,6 @@ case class Fp(p: Int) extends Field {
   val zero: T = FpElement(0)
   val one: T = FpElement(1)
 
-  def inverse(x: T): T = {
-    if (x == zero) {
-      throw new IllegalArgumentException("zero does not have inverse")
-    } else {
-      x.power(p - 2)
-    }
-  }
-
   case class FpElement(n: Int) extends FieldElement {
 
     val value: Int = n % p
@@ -33,7 +25,13 @@ case class Fp(p: Int) extends Field {
     override def -(other: T): T = this.minus(other)
     def multiply(other: T): T = FpElement(this.value * other.value)
     override def *(other: T): T = this.multiply(other)
-    def inverse: T = one / this
+    def inverse: T = {
+      if (this == zero) {
+        throw new IllegalArgumentException("zero does not have inverse")
+      } else {
+        this.power(p - 2)
+      }
+    }
     def divide(other: T): T = this * other.inverse
     def /(other: T): T = this.divide(other)
 
